@@ -11,7 +11,7 @@ wikiLink = re.compile("^/wiki/[^:#]*$")
 
 def explore(url, depth, stop, documents, outbound, problems):
     if (url not in documents and depth < stop):
-        print("adding = " + url)
+        print("adding = " + url + ", documents size = " + str(len(documents)))
         documents.append(url)
         outbound.append([])
         fullUrl = "http://en.wikipedia.org" + url
@@ -27,7 +27,7 @@ def explore(url, depth, stop, documents, outbound, problems):
             if article:
                 for link in article.find_all("a", {"href" : wikiLink}):
                     if (link.get("href") not in documents):
-                        print("exploring: " + link.get("href"))
+                        #print("exploring: " + link.get("href"))
                         explore(link.get("href"), depth + 1, stop, documents, outbound, problems)
                         outbound[index].append(link.get("href"))
             else:
