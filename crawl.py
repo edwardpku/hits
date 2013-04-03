@@ -10,6 +10,7 @@ import urllib2
 from bs4 import BeautifulSoup
 import re
 
+#the regex to match an internal wikipedia link
 wikiLink = re.compile("^/wiki/[^:#]*$")
 
 #accepts a target url of the form /wiki/HITS_algorithm or /wiki/Ferrari
@@ -59,9 +60,9 @@ def explore(url, depth, stop, documents, outbound, problems):
             outbound.pop()
 
 #accpets a list of documents and a corresponding list of lists of
-#outbound urls, writes the adjacency list to wikidump.txt
-def dumpLists(documents, outbound):
-    f = open("wikidump.txt", "w")
+#outbound urls, writes the adjacency list to the specified outFile
+def dumpLists(documents, outbound, outFile):
+    f = open(outFile, "w")
     for index, url in enumerate(documents):
         f.write(url + ":\n")
         for link in outbound[index]:
@@ -76,23 +77,24 @@ def dumpProblems(problems):
 #prints usage information for crawl
 def showUsage():
     print("Crawl Usage:")
-    print("   crawl targetUrl searchDepth")
+    print("   crawl targetUrl searchDepth outFile")
     print("Examples:")
-    print("   crawl /wiki/HITS_algorithm 3")
-    print("   crawl /wiki/Ferrari 5")
+    print("   crawl /wiki/HITS_algorithm 3 hits.dump")
+    print("   crawl /wiki/Ferrari 5 ferrari.dump")
 
-#yeah I'm used to java, learning python is hard
+#yeah I'm used to java, learning python is weird
 def main():
-    if (len(sys.argv) < 3):
+    if (len(sys.argv) < 4):
         showUsage()
     else:
         url = sys.argv[1]
         stop = int(sys.argv[2])
+        outFile = sys.argv[3]
         documents = []
         outbound = []
         problems = []
         explore(url, 0, stop, documents, outbound, problems)
-        dumpLists(documents, outbound)
+        dumpLists(documents, outbound, outFile)
         dumpProblems(problems)
 
 main()
